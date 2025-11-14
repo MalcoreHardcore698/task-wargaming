@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { Button, Helmet, Placeholder } from "@/shared/ui";
+import { Button, Placeholder, PageSEO } from "@/shared/ui";
 import { ERoutePath } from "@/app/routes/types";
 
 import styles from "./styles.module.scss";
@@ -17,14 +17,14 @@ function NotFound() {
 
   return (
     <div className={styles.root}>
-      <Helmet title={TITLE} description={DESCRIPTION} />
+      <PageSEO.Helmet title={TITLE} description={DESCRIPTION} />
 
       <Placeholder
         variant="not-found"
         title={TITLE}
         description={DESCRIPTION}
         action={
-          <Button variant="outline" onClick={handleGoToHome}>
+          <Button onClick={handleGoToHome}>
             Go to home
           </Button>
         }

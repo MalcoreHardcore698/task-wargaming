@@ -11,7 +11,6 @@
 - **React Router DOM 7.7.0** — client-side routing
 - **SCSS** — modular styling and design tokens
 - **Framer Motion 12.23.9** — transitions and animations
-- **Zod 4.0.5** — schema-driven form validation
 
 ## Getting Started
 

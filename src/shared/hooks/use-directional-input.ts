@@ -9,7 +9,7 @@ export interface IDirectionalInputEvent {
   source: TDirectionalInputSource;
 }
 
-export interface IDirectionalInputOptions<TElement extends HTMLElement = HTMLElement> {
+export interface IDirectionalInputOptions {
   /** Обработчик направления, вызывается для клавиатуры и геймпада */
   onDirection: (event: IDirectionalInputEvent) => void;
   /** Флаг активности хука */
@@ -67,7 +67,7 @@ export default function useDirectionalInput<TElement extends HTMLElement = HTMLE
   enabled = true,
   axisThreshold = DEFAULT_AXIS_THRESHOLD,
   repeatInterval = DEFAULT_REPEAT_INTERVAL,
-}: IDirectionalInputOptions<TElement>): (element: TElement | null) => void {
+}: IDirectionalInputOptions): (element: TElement | null) => void {
   /** Храним текущий DOM-элемент для подписки */
   const [element, setElement] = useState<TElement | null>(null);
   /** Актуальный обработчик направления */
