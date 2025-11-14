@@ -1,5 +1,8 @@
 @use '@/shared/styles' as *;
 
+$icon-size: 36px;
+$icon-size-tablet: 24px;
+
 .root {
   display: grid;
   grid-template-columns: 40px 1fr;
@@ -12,8 +15,8 @@
 }
 
 .icon {
-  width: 36px;
-  height: 36px;
+  width: $icon-size;
+  height: $icon-size;
 }
 
 .content {
@@ -36,4 +39,15 @@
   font-size: 12px;
   font-weight: var(--font-weight-semibold);
   color: #96999D;
+}
+
+@include respond-to('tablet') {
+  .root {
+    grid-template-columns: $icon-size-tablet 1fr;
+  }
+
+  .icon {
+    width: $icon-size-tablet;
+    height: $icon-size-tablet;
+  }
 }

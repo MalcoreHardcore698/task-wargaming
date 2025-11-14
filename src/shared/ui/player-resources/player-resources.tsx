@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import { ERoutePath } from "@/app/routes/types";
 import type { TPlayerResource } from "@/services/player";
+import { formatResourceValue } from "@/shared/utils/resource-format";
 
 import styles from "./styles.module.scss";
 
@@ -26,7 +27,7 @@ function PlayerResources({ resources = [] }: IPlayerResourcesProps) {
           onClick={handleClick}
         >
           <span style={{ color: resource.color }} className={styles.amount}>
-            {resource.amount}
+            {formatResourceValue(resource.value, resource.format)}
           </span>
           <img
             src={resource.icon}

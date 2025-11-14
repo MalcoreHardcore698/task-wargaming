@@ -14,6 +14,8 @@ function usePlayer() {
     setSelectedSkin: playerService.setSelectedSkin.bind(playerService),
     setResources: playerService.setResources.bind(playerService),
     updateResource: playerService.updateResource.bind(playerService),
+    adjustResource: playerService.adjustResource.bind(playerService),
+    purchaseSkin: playerService.purchaseSkin.bind(playerService),
     getSkinGuise: playerService.getSkinGuise.bind(playerService),
     setSkinGuise: playerService.setSkinGuise.bind(playerService),
   };

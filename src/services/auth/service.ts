@@ -1,7 +1,10 @@
 import { TokenStorage } from "@/shared/api";
+import { ensureAppVersion } from "@/shared/utils/app-version";
 import type { TUser } from "@/shared/types";
 
 const CURRENT_USER_KEY = "current_user";
+
+ensureAppVersion();
 
 class AuthService {
   private saveCurrentUser(user: TUser): void {

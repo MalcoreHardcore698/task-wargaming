@@ -24,11 +24,11 @@ export type TCarouselDirection = "vertical" | "horizontal";
 export interface IPlayerSkinsCarouselProps {
   ref?: Ref<HTMLDivElement>;
   skins: TPlayerSkin[];
+  className?: string;
   direction?: TCarouselDirection;
   pendingIndex: number | null;
   selectedPlayerSkin: TPlayerSkin;
   equippedSkinId: string;
-  className?: string;
   setContentVisible: (visible: boolean) => void;
   setPendingIndex: (index: number | null) => void;
   onSkinSelect: (skin: TPlayerSkin) => void;
@@ -123,6 +123,7 @@ function PlayerSkinsCarousel({
     (node: HTMLDivElement | null) => {
       containerRef.current = node;
       directionalInputTarget(node);
+
       if (typeof ref === "function") {
         ref(node);
       } else if (ref) {
@@ -175,14 +176,17 @@ function PlayerSkinsCarousel({
   useLayoutEffect(() => {
     const listEl = listRef.current;
     if (!listEl) return;
+
     const items = listEl.querySelectorAll<HTMLElement>("[data-portrait-item]");
     const first = items[0];
+
     if (!first) return;
     const style = window.getComputedStyle(listEl);
 
     if (isHorizontal) {
       const gap =
         parseFloat(style.columnGap || style.gap || style.rowGap || "0") || 0;
+
       const width = first.offsetWidth;
       setItemExtent(width);
       setStride(width + gap);
@@ -191,6 +195,7 @@ function PlayerSkinsCarousel({
 
     const gap = parseFloat(style.rowGap || style.gap || "0") || 0;
     const height = first.offsetHeight;
+
     setItemExtent(height);
     setStride(height + gap);
   }, [skins.length, isHorizontal]);

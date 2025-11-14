@@ -1,10 +1,13 @@
 import type { TPlayerSkinGuiseType } from "../player-skins/types";
 
+export type TPlayerResourceFormat = "currency" | "days";
+
 export type TPlayerResource = {
   id: string;
   label: string;
   icon: string;
-  amount: string;
+  value: number;
+  format: TPlayerResourceFormat;
   color?: string;
   hasNew?: boolean;
 };

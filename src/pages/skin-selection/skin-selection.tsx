@@ -13,10 +13,12 @@ import { fadeIn, EASING } from "@/shared/ui";
 import PageContent from "./page-content";
 import styles from "./styles.module.scss";
 
+const SKIN_PURCHASE_COST = 25_000;
+
 function SkinSelectionPage() {
   const navigate = useNavigate();
 
-  const { selectedSkinId, setSelectedSkin } = usePlayer();
+  const { selectedSkinId, resources, purchaseSkin } = usePlayer();
   const { skins, getById } = usePlayerSkins();
 
   const [displayedSkinId, setDisplayedSkinId] =
@@ -39,10 +41,23 @@ function SkinSelectionPage() {
     alert(`${selectedPlayerSkin.name}: ${selectedPlayerSkin.description}`);
   };
 
-  const handleOutfit = () => {
-    if (!displayedSkinId || displayedSkinId === selectedSkinId) return;
+  const credits = resources.find((resource) => resource.id === "credits");
+  const canAffordPurchase = (credits?.value ?? 0) >= SKIN_PURCHASE_COST;
 
-    setSelectedSkin(displayedSkinId);
+  const handleOutfit = () => {
+    if (
+      !displayedSkinId ||
+      displayedSkinId === selectedSkinId ||
+      !canAffordPurchase
+    ) {
+      return;
+    }
+
+    const success = purchaseSkin(displayedSkinId, SKIN_PURCHASE_COST);
+
+    if (!success) {
+      alert("Not enough credits to outfit this commander.");
+    }
   };
 
   const handleBack = () => {
@@ -107,6 +122,7 @@ function SkinSelectionPage() {
             keyLabel: "Enter",
             keyboardKey: "Enter",
             onClick: handleOutfit,
+            disabled: displayedSkinId === selectedSkinId || !canAffordPurchase,
           },
         ]}
         trailing={[

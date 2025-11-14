@@ -34,3 +34,15 @@
     color: #96999D;
   }
 }
+
+@include respond-to('tablet') {
+  .root {
+    .header {
+      .title {
+        padding: 6px 14px 4px 14px;
+
+        font-size: 14px;
+      }
+    }
+  }
+}

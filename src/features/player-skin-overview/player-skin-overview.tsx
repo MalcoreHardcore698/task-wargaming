@@ -2,6 +2,7 @@ import cn from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaAngleDown } from "react-icons/fa";
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -85,6 +86,7 @@ export function PlayerSkinOverview({
   const { skins, getGuises } = usePlayerSkins();
 
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
   const [isPickerOpen, setPickerOpen] = useState<boolean>(false);
   const [isExpanded, setExpanded] = useState<boolean>(false);
   const [isAnimating, setAnimating] = useState<boolean>(false);
@@ -106,6 +108,32 @@ export function PlayerSkinOverview({
     ) + 1;
 
   const currentGuise = getSkinGuise(selectedSkinId);
+
+  const measureContentHeight = useCallback(() => {
+    if (!canCollapsable) {
+      return;
+    }
+
+    const node = contentRef.current;
+
+    if (!node) {
+      return;
+    }
+
+    setContentHeight(node.scrollHeight);
+  }, [canCollapsable]);
+
+  const scheduleContentHeightMeasurement = useCallback(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        measureContentHeight();
+      });
+    });
+  }, [measureContentHeight]);
 
   const animation = useMemo(() => {
     return visible ? APPEAR_ANIMATION : DISAPPEAR_ANIMATION;
@@ -168,23 +196,21 @@ export function PlayerSkinOverview({
       return;
     }
 
-    const node = rootRef.current;
+    const node = contentRef.current;
 
     if (!node) {
       return;
     }
 
-    const measure = () => {
-      setContentHeight(node.scrollHeight);
-    };
-
-    measure();
+    measureContentHeight();
 
     if (typeof ResizeObserver === "undefined") {
       return;
     }
 
-    const observer = new ResizeObserver(measure);
+    const observer = new ResizeObserver(() => {
+      measureContentHeight();
+    });
 
     observer.observe(node);
 
@@ -197,6 +223,7 @@ export function PlayerSkinOverview({
     effects.length,
     guiseOptions.length,
     selectedSkinId,
+    measureContentHeight,
   ]);
 
   useEffect(() => {
@@ -240,113 +267,118 @@ export function PlayerSkinOverview({
           <FaAngleDown />
         </button>
       )}
-      <div className={styles.header}>
-        <div className={styles.stock}>
-          <span className={styles.stockIndex}>
-            {currentIndex}/{totalSkins}
-          </span>{" "}
-          IN STOCK
+      <div ref={contentRef} className={styles.content}>
+        <div className={styles.header}>
+          <div className={styles.stock}>
+            <span className={styles.stockIndex}>
+              {currentIndex}/{totalSkins}
+            </span>{" "}
+            IN STOCK
+          </div>
+
+          <h2 className={styles.title}>{title}</h2>
+
+          <AnimatePresence mode="wait">
+            <div className={styles.guiseContainer}>
+              {!!currentGuise && (
+                <motion.div
+                  key={currentGuise.type}
+                  className={styles.guise}
+                  variants={GUISE_VARIANTS}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                >
+                  <div className={styles.guiseIcon}>
+                    <img src={currentGuise.icon} alt={currentGuise.label} />
+                  </div>
+                  <div className={styles.guiseLabel}>{currentGuise.label}</div>
+                </motion.div>
+              )}
+
+              {skin && canCollapsable && (
+                <PlayerSkinName
+                  level={skin?.level ?? 0}
+                  rank={skin?.rank ?? ""}
+                  name={(skin?.name ?? "").toUpperCase()}
+                  subtitle="RANK"
+                  className={styles.playerSkinName}
+                  visible={canCollapsable}
+                />
+              )}
+            </div>
+          </AnimatePresence>
         </div>
+        <div className={styles.guiseApply}>
+          <AnimatePresence mode="wait">
+            {!isPickerOpen && (
+              <motion.button
+                key="guise-picker-toggle"
+                type="button"
+                variants={GUISE_APPLY_VARIANTS}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                onClick={() => {
+                  setPickerOpen((v) => !v);
+                  scheduleContentHeightMeasurement();
+                }}
+              >
+                <p className={styles.guiseApplyTitle}>APPLY GUISE</p>
+                <p className={styles.guiseApplyDescription}>
+                  This guise can be applied to the Commander.
+                </p>
+              </motion.button>
+            )}
 
-        <h2 className={styles.title}>{title}</h2>
-
-        <AnimatePresence mode="wait">
-          <div className={styles.guiseContainer}>
-            {!!currentGuise && (
+            {isPickerOpen && (
               <motion.div
-                key={currentGuise.type}
-                className={styles.guise}
-                variants={GUISE_VARIANTS}
+                key="guise-picker"
+                variants={GUISE_APPLY_VARIANTS}
                 initial="initial"
                 animate="animate"
                 exit="exit"
               >
-                <div className={styles.guiseIcon}>
-                  <img src={currentGuise.icon} alt={currentGuise.label} />
-                </div>
-                <div className={styles.guiseLabel}>{currentGuise.label}</div>
+                <Section
+                  title="TYPES OF GUISES"
+                  description="You can select a guise that applies a bonus to battle earnings, changes your Commaner's appearance, and/or applies special effects."
+                >
+                  <div className={styles.options} role="menu">
+                    {guiseOptions.map((guiseOption) => (
+                      <Option
+                        key={guiseOption.type}
+                        icon={guiseOption.icon}
+                        title={guiseOption.label}
+                        description={guiseOption.description}
+                        onClick={() => {
+                          setSkinGuise(selectedSkinId, guiseOption.type);
+                          setPickerOpen(false);
+                          scheduleContentHeightMeasurement();
+                        }}
+                      />
+                    ))}
+                  </div>
+                </Section>
               </motion.div>
             )}
+          </AnimatePresence>
+        </div>
 
-            {skin && canCollapsable && (
-              <PlayerSkinName
-                level={skin?.level ?? 0}
-                rank={skin?.rank ?? ""}
-                name={(skin?.name ?? "").toUpperCase()}
-                subtitle="RANK"
-                className={styles.playerSkinName}
-                visible={canCollapsable}
-              />
-            )}
-          </div>
-        </AnimatePresence>
+        {effects.length > 0 && (
+          <Section title="VISUAL AND SOUND EFFECTS">
+            <div className={styles.options}>
+              {effects.map((effect) => (
+                <Option
+                  key={effect.id}
+                  icon={effect.icon}
+                  title={effect.title}
+                  description={effect.description}
+                />
+              ))}
+            </div>
+          </Section>
+        )}
       </div>
-
-      <div className={styles.guiseApply}>
-        <AnimatePresence mode="wait">
-          {!isPickerOpen && (
-            <motion.button
-              key="guise-picker-toggle"
-              type="button"
-              variants={GUISE_APPLY_VARIANTS}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              onClick={() => setPickerOpen((v) => !v)}
-            >
-              <p className={styles.guiseApplyTitle}>APPLY GUISE</p>
-              <p className={styles.guiseApplyDescription}>
-                This guise can be applied to the Commander.
-              </p>
-            </motion.button>
-          )}
-
-          {isPickerOpen && (
-            <motion.div
-              key="guise-picker"
-              variants={GUISE_APPLY_VARIANTS}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-            >
-              <Section
-                title="TYPES OF GUISES"
-                description="You can select a guise that applies a bonus to battle earnings, changes your Commaner's appearance, and/or applies special effects."
-              >
-                <div className={styles.options} role="menu">
-                  {guiseOptions.map((guiseOption) => (
-                    <Option
-                      key={guiseOption.type}
-                      icon={guiseOption.icon}
-                      title={guiseOption.label}
-                      description={guiseOption.description}
-                      onClick={() => {
-                        setSkinGuise(selectedSkinId, guiseOption.type);
-                        setPickerOpen(false);
-                      }}
-                    />
-                  ))}
-                </div>
-              </Section>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {effects.length > 0 && (
-        <Section title="VISUAL AND SOUND EFFECTS">
-          <div className={styles.options}>
-            {effects.map((effect) => (
-              <Option
-                key={effect.id}
-                icon={effect.icon}
-                title={effect.title}
-                description={effect.description}
-              />
-            ))}
-          </div>
-        </Section>
-      )}
     </motion.div>
   );
 }

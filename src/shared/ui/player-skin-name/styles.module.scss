@@ -15,6 +15,7 @@
 
   font-size: 38px;
   font-weight: var(--font-weight-extrabold);
+  font-family: var(--font-family-roboto);
   color: var(--color-primary);
 }
 
@@ -64,6 +65,14 @@
     gap: 0;
 
     padding: 0;
+  }
+
+  .container {
+    @include fluid-scale(0.75, 1, 160px, 768px, left);
+
+    gap: 2px;
+
+    padding: 0 4px;
   }
 
   .level {

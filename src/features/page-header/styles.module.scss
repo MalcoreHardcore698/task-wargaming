@@ -2,6 +2,7 @@
 
 $root-offset: 24px;
 $root-offset-tablet: 16px;
+$root-offset-mobile: 8px;
 
 .root {
   position: fixed;
@@ -77,6 +78,10 @@ $root-offset-tablet: 16px;
 }
 
 @include respond-to('mobile') {
+  .root {
+    top: $root-offset-mobile;
+  }
+
   .bars {
     align-items: start;
     gap: 24px;
