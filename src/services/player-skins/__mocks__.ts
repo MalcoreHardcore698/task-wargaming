@@ -1,16 +1,41 @@
+import guisePersonalIcon from "@/assets/svg/guise-personal-c.svg";
+import guiseNationalIcon from "@/assets/svg/guise-national-c.svg";
+import effectHornIcon from "@/assets/images/icons/icon-effect-horn.png";
+import effectLegendaryIcon from "@/assets/images/icons/icon-effect-legendary.png";
+import effectTracerIcon from "@/assets/images/icons/icon-effect-tracer.png";
+import effectVoiceoverIcon from "@/assets/images/icons/icon-effect-voiceover.png";
+import henkPropperPortrait from "@/assets/images/skins/portraits/henk-propper-mini.png";
+import henkPropperSplash from "@/assets/images/skins/henk-propper.png";
+import alexanderGromovPortrait from "@/assets/images/skins/portraits/alexander-gromov-mini.png";
+import alexanderGromovSplash from "@/assets/images/skins/alexander-gromov.png";
+import angelaLuttiPortrait from "@/assets/images/skins/portraits/angela-lutti-mini.png";
+import angelaLuttiSplash from "@/assets/images/skins/angela-lutti.png";
+import poseidonPortrait from "@/assets/images/skins/portraits/poseidon-mini.png";
+import poseidonSplash from "@/assets/images/skins/poseidon.png";
+import athenaPortrait from "@/assets/images/skins/portraits/athena-mini.png";
+import athenaSplash from "@/assets/images/skins/athena.png";
+import baradunPortrait from "@/assets/images/skins/portraits/baradun-mini.png";
+import baradunSplash from "@/assets/images/skins/baradun.png";
+import blacksmithPortrait from "@/assets/images/skins/portraits/blacksmith-mini.png";
+import blacksmithSplash from "@/assets/images/skins/blacksmith.png";
+import farmerPortrait from "@/assets/images/skins/portraits/farmer-mini.png";
+import farmerSplash from "@/assets/images/skins/farmer.png";
+import zeusPortrait from "@/assets/images/skins/portraits/zeus-mini.png";
+import zeusSplash from "@/assets/images/skins/zeus.png";
+
 import type { TPlayerSkin, TPlayerSkinGuise, TPlayerSkinEffect } from "./types";
 
 export const PLAYER_SKIN_GUISES: TPlayerSkinGuise[] = [
   {
     type: "general" as const,
-    icon: "/src/assets/svg/guise-personal-c.svg",
+    icon: guisePersonalIcon,
     label: "GENERAL GUISE",
     description:
       "Guise can only be applied to Commanders from specific nations.",
   },
   {
     type: "national" as const,
-    icon: "/src/assets/svg/guise-national-c.svg",
+    icon: guiseNationalIcon,
     label: "NATIONAL GUISE",
     description: "Guise can only be applied to Commanders",
   },
@@ -19,25 +44,25 @@ export const PLAYER_SKIN_GUISES: TPlayerSkinGuise[] = [
 export const PLAYER_SKIN_EFFECTS: TPlayerSkinEffect[] = [
   {
     id: "signal-flare",
-    icon: "/src/assets/images/icons/icon-effect-horn.png",
+    icon: effectHornIcon,
     title: "Signal Flare",
     description: "Use the horn to launch a signal flare in battle",
   },
   {
     id: "legendary-skill",
-    icon: "/src/assets/images/icons/icon-effect-legendary.png",
+    icon: effectLegendaryIcon,
     title: "Legendary Skill Effect",
     description: "Add a visual effect for legendary skill activation in battle",
   },
   {
     id: "tinted-tracers",
-    icon: "/src/assets/images/icons/icon-effect-tracer.png",
+    icon: effectTracerIcon,
     title: "Tinted Tracers",
     description: "Add tinted shell tracers",
   },
   {
     id: "voiceover",
-    icon: "/src/assets/images/icons/icon-effect-voiceover.png",
+    icon: effectVoiceoverIcon,
     title: "Voiceover",
     description: "Add unique voiceover",
   },
@@ -50,8 +75,8 @@ export const PLAYER_SKINS: TPlayerSkin[] = [
     rank: "LEGENDARY COMMANDER",
     level: 16,
     description: "Original commander without special effects.",
-    portrait: "/src/assets/images/skins/portraits/henk-propper-mini.png",
-    splashImage: "/src/assets/images/skins/henk-propper.png",
+    portrait: henkPropperPortrait,
+    splashImage: henkPropperSplash,
     effects: [],
   },
   {
@@ -60,8 +85,8 @@ export const PLAYER_SKINS: TPlayerSkin[] = [
     rank: "LEGENDARY COMMANDER",
     level: 16,
     description: "Skin with thematic design and unique effects.",
-    portrait: "/src/assets/images/skins/portraits/alexander-gromov-mini.png",
-    splashImage: "/src/assets/images/skins/alexander-gromov.png",
+    portrait: alexanderGromovPortrait,
+    splashImage: alexanderGromovSplash,
     effects: PLAYER_SKIN_EFFECTS.slice(0, 2),
   },
   {
@@ -70,8 +95,8 @@ export const PLAYER_SKINS: TPlayerSkin[] = [
     rank: "LEGENDARY COMMANDER",
     level: 16,
     description: "Skin with thematic design and unique effects.",
-    portrait: "/src/assets/images/skins/portraits/angela-lutti-mini.png",
-    splashImage: "/src/assets/images/skins/angela-lutti.png",
+    portrait: angelaLuttiPortrait,
+    splashImage: angelaLuttiSplash,
     effects: PLAYER_SKIN_EFFECTS.slice(0, 2),
   },
   {
@@ -80,8 +105,8 @@ export const PLAYER_SKINS: TPlayerSkin[] = [
     rank: "LEGENDARY COMMANDER",
     level: 16,
     description: "Unique skin for a commander with visual and audio effects.",
-    portrait: "/src/assets/images/skins/portraits/poseidon-mini.png",
-    splashImage: "/src/assets/images/skins/poseidon.png",
+    portrait: poseidonPortrait,
+    splashImage: poseidonSplash,
     effects: PLAYER_SKIN_EFFECTS.slice(0, 2),
   },
   {
@@ -90,8 +115,8 @@ export const PLAYER_SKINS: TPlayerSkin[] = [
     rank: "LEGENDARY COMMANDER",
     level: 16,
     description: "Skin with thematic design and unique effects.",
-    portrait: "/src/assets/images/skins/portraits/athena-mini.png",
-    splashImage: "/src/assets/images/skins/athena.png",
+    portrait: athenaPortrait,
+    splashImage: athenaSplash,
     effects: PLAYER_SKIN_EFFECTS,
   },
   {
@@ -100,8 +125,8 @@ export const PLAYER_SKINS: TPlayerSkin[] = [
     rank: "LEGENDARY COMMANDER",
     level: 16,
     description: "Skin with thematic design and unique effects.",
-    portrait: "/src/assets/images/skins/portraits/baradun-mini.png",
-    splashImage: "/src/assets/images/skins/baradun.png",
+    portrait: baradunPortrait,
+    splashImage: baradunSplash,
     effects: PLAYER_SKIN_EFFECTS,
   },
   {
@@ -110,8 +135,8 @@ export const PLAYER_SKINS: TPlayerSkin[] = [
     rank: "LEGENDARY COMMANDER",
     level: 16,
     description: "Skin with thematic design and unique effects.",
-    portrait: "/src/assets/images/skins/portraits/blacksmith-mini.png",
-    splashImage: "/src/assets/images/skins/blacksmith.png",
+    portrait: blacksmithPortrait,
+    splashImage: blacksmithSplash,
     effects: PLAYER_SKIN_EFFECTS,
   },
   {
@@ -120,8 +145,8 @@ export const PLAYER_SKINS: TPlayerSkin[] = [
     rank: "LEGENDARY COMMANDER",
     level: 16,
     description: "Skin with thematic design and unique effects.",
-    portrait: "/src/assets/images/skins/portraits/farmer-mini.png",
-    splashImage: "/src/assets/images/skins/farmer.png",
+    portrait: farmerPortrait,
+    splashImage: farmerSplash,
     effects: PLAYER_SKIN_EFFECTS,
   },
   {
@@ -130,8 +155,8 @@ export const PLAYER_SKINS: TPlayerSkin[] = [
     rank: "LEGENDARY COMMANDER",
     level: 16,
     description: "Skin with powerful visual effects and voiceover.",
-    portrait: "/src/assets/images/skins/portraits/zeus-mini.png",
-    splashImage: "/src/assets/images/skins/zeus.png",
+    portrait: zeusPortrait,
+    splashImage: zeusSplash,
     effects: PLAYER_SKIN_EFFECTS,
   },
 ];
