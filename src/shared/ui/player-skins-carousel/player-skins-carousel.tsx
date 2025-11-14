@@ -1,23 +1,25 @@
 import cn from "classnames";
 import { motion } from "framer-motion";
-import {
-  type Ref,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { type Ref, useCallback, useMemo, useRef } from "react";
 
 import type { TPlayerSkin } from "@/services/player-skins";
-import {
-  useDirectionalInput,
-  type IDirectionalInputEvent,
-} from "@/shared/hooks";
-import PlayerSkinPortrait from "@/shared/ui/player-skin-portrait";
 import { EASING } from "@/shared/ui/animations";
 
+import { useCarouselDimensions, useCarouselNavigation } from "./hooks";
+import {
+  ACTIVE_VIEWPORT_TOP,
+  calculateTranslate,
+  mapPlayerSkins,
+  resolveCurrentIndex,
+  resolveVisualIndex,
+} from "./utils";
+import PlayerSkinItem from "./player-skin-item";
 import styles from "./styles.module.scss";
+
+const CAROUSEL_ANIMATION = {
+  duration: 0.3,
+  ease: EASING.out,
+} as const;
 
 export type TCarouselDirection = "vertical" | "horizontal";
 
@@ -46,30 +48,18 @@ function PlayerSkinsCarousel({
   setPendingIndex,
   onSkinSelect,
 }: IPlayerSkinsCarouselProps) {
-  const playerSkins = skins.map((playerSkin, idx) => ({
-    index: idx,
-    id: playerSkin.id,
-    name: playerSkin.name,
-    image: playerSkin.portrait,
-    equipped: playerSkin.id === equippedSkinId,
-  }));
-
+  const playerSkins = useMemo(
+    () => mapPlayerSkins(skins, equippedSkinId),
+    [skins, equippedSkinId]
+  );
   const currentIndex = useMemo(
-    () =>
-      Math.max(
-        0,
-        skins.findIndex((s) => s.id === selectedPlayerSkin.id)
-      ),
+    () => resolveCurrentIndex(skins, selectedPlayerSkin.id),
     [skins, selectedPlayerSkin.id]
   );
   const isSwitching = pendingIndex != null;
-  const visualIndex = pendingIndex ?? currentIndex;
+  const visualIndex = resolveVisualIndex(pendingIndex, currentIndex);
 
-  const listRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [stride, setStride] = useState<number>(120);
-  const [itemExtent, setItemExtent] = useState<number>(114);
-  const ACTIVE_VIEWPORT_TOP = 300;
 
   const isHorizontal = direction === "horizontal";
   const totalSkins = skins.length;
@@ -80,43 +70,63 @@ function PlayerSkinsCarousel({
     className
   );
 
-  const handleDirectionalInput = useCallback(
-    ({ direction }: IDirectionalInputEvent): void => {
-      if (isSwitching || totalSkins === 0) return;
+  const { listRef, stride, itemExtent } = useCarouselDimensions({
+    isHorizontal,
+    itemsCount: totalSkins,
+  });
 
-      const isForward =
-        (isHorizontal && direction === "right") ||
-        (!isHorizontal && direction === "down");
-      const isBackward =
-        (isHorizontal && direction === "left") ||
-        (!isHorizontal && direction === "up");
-
-      if (!isForward && !isBackward) return;
-
-      const delta = isForward ? 1 : -1;
-      const nextIndex = Math.min(
-        totalSkins - 1,
-        Math.max(0, currentIndex + delta)
-      );
-
-      if (nextIndex === currentIndex) return;
-
-      setContentVisible(false);
-      setPendingIndex(nextIndex);
+  const getTranslate = useCallback(
+    (index: number): number => {
+      return calculateTranslate({
+        index,
+        isHorizontal,
+        stride,
+        itemExtent,
+        container: containerRef.current,
+        activeViewportTop: ACTIVE_VIEWPORT_TOP,
+      });
     },
-    [
-      currentIndex,
-      isHorizontal,
-      isSwitching,
-      setContentVisible,
-      setPendingIndex,
-      totalSkins,
-    ]
+    [stride, itemExtent, isHorizontal]
   );
 
-  const directionalInputTarget = useDirectionalInput<HTMLDivElement>({
-    onDirection: handleDirectionalInput,
-    enabled: !isSwitching && totalSkins > 1,
+  const carouselAnimation = useMemo(() => {
+    if (isHorizontal) {
+      return {
+        x: getTranslate(visualIndex),
+      };
+    }
+
+    return {
+      y: getTranslate(visualIndex),
+    };
+  }, [isHorizontal, visualIndex, getTranslate]);
+
+  const setPendingIndexForNavigation = useCallback(
+    (index: number) => {
+      setPendingIndex(index);
+    },
+    [setPendingIndex]
+  );
+
+  const handleItemSelect = useCallback(
+    (index: number) => {
+      if (isSwitching || index === currentIndex) {
+        return;
+      }
+
+      setContentVisible(false);
+      setPendingIndex(index);
+    },
+    [currentIndex, isSwitching, setContentVisible, setPendingIndex]
+  );
+
+  const directionalInputTarget = useCarouselNavigation({
+    isHorizontal,
+    isSwitching,
+    totalSkins,
+    currentIndex,
+    setContentVisible,
+    setPendingIndex: setPendingIndexForNavigation,
   });
 
   const handleContainerRef = useCallback(
@@ -153,96 +163,28 @@ function PlayerSkinsCarousel({
     completeSelection(pendingIndex);
   };
 
-  const getTranslate = (index: number): number => {
-    if (isHorizontal) {
-      const container = containerRef.current;
-      if (!container) return 0;
-
-      const { width } = container.getBoundingClientRect();
-      const containerStyle = window.getComputedStyle(container);
-      const paddingLeft = parseFloat(containerStyle.paddingLeft || "0") || 0;
-
-      const target = width / 2 - paddingLeft;
-      const itemCenter = index * stride + itemExtent / 2;
-
-      return target - itemCenter;
-    }
-
-    const containerTop = containerRef.current?.getBoundingClientRect().top ?? 0;
-    const itemCenter = index * stride + itemExtent / 2;
-    return ACTIVE_VIEWPORT_TOP - containerTop - itemCenter;
-  };
-
-  useLayoutEffect(() => {
-    const listEl = listRef.current;
-    if (!listEl) return;
-
-    const items = listEl.querySelectorAll<HTMLElement>("[data-portrait-item]");
-    const first = items[0];
-
-    if (!first) return;
-    const style = window.getComputedStyle(listEl);
-
-    if (isHorizontal) {
-      const gap =
-        parseFloat(style.columnGap || style.gap || style.rowGap || "0") || 0;
-
-      const width = first.offsetWidth;
-      setItemExtent(width);
-      setStride(width + gap);
-      return;
-    }
-
-    const gap = parseFloat(style.rowGap || style.gap || "0") || 0;
-    const height = first.offsetHeight;
-
-    setItemExtent(height);
-    setStride(height + gap);
-  }, [skins.length, isHorizontal]);
-
   return (
     <div ref={handleContainerRef} className={rootClassName} tabIndex={0}>
       <motion.div
         ref={listRef}
+        animate={carouselAnimation}
         className={styles.carousel}
-        animate={
-          isHorizontal
-            ? {
-                x: getTranslate(visualIndex),
-              }
-            : {
-                y: getTranslate(visualIndex),
-              }
-        }
-        transition={{
-          duration: 0.3,
-          ease: EASING.out,
-        }}
+        transition={CAROUSEL_ANIMATION}
         onAnimationComplete={finishAnimation}
       >
-        {playerSkins.map((p) => (
-          <div
-            key={p.id}
-            data-portrait-item
-            className={cn(
-              styles.item,
-              !isSwitching && p.index === currentIndex && styles.activeItem,
-              (p.index < visualIndex || p.index > visualIndex + 2) &&
-                styles.dimmed
-            )}
-          >
-            <PlayerSkinPortrait
-              src={p.image}
-              name={p.name}
-              active={!isSwitching && p.index === currentIndex}
-              equipped={p.equipped}
-              onClick={() => {
-                if (isSwitching || p.index === currentIndex) return;
-                setContentVisible(false);
-                setPendingIndex(p.index);
-              }}
-            />
-          </div>
+        {playerSkins.map((playerSkin) => (
+          <PlayerSkinItem
+            key={playerSkin.id}
+            name={playerSkin.name}
+            image={playerSkin.image}
+            index={playerSkin.index}
+            visualIndex={visualIndex}
+            currentIndex={currentIndex}
+            equipped={playerSkin.equipped}
+            isSwitching={isSwitching}
+            isHorizontal={isHorizontal}
+            onSelect={handleItemSelect}
+          />
         ))}
       </motion.div>
     </div>

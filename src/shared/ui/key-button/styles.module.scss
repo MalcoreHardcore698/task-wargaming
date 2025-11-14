@@ -1,28 +1,27 @@
 @use "sass:map";
 @use "@/shared/styles" as *;
 
-$key-colors: (
-  "red": var(--color-danger),
-  "green": var(--color-success),
-  "yellow": var(--color-warning),
-  "blue": var(--color-info),
-  "gray": #09192F
-);
-
-$key-border-colors: (
-  "red": var(--color-danger),
-  "green": var(--color-success),
-  "yellow": var(--color-warning),
-  "blue": var(--color-info),
-  "gray": #5D7C8B
-);
-
-$key-text-colors: (
-  "red": var(--color-white),
-  "green": var(--color-white),
-  "yellow": var(--color-black),
-  "blue": var(--color-white),
-  "gray": #A6C1DD
+$key-styles: (
+  "red": (background: var(--color-danger),
+    border: var(--color-danger),
+    text: var(--color-white),
+  ),
+  "green": (background: var(--color-success),
+    border: var(--color-success),
+    text: var(--color-white),
+  ),
+  "yellow": (background: var(--color-warning),
+    border: var(--color-warning),
+    text: var(--color-black),
+  ),
+  "blue": (background: var(--color-info),
+    border: var(--color-info),
+    text: var(--color-white),
+  ),
+  "gray": (background: #09192F,
+    border: #5D7C8B,
+    text: #A6C1DD,
+  )
 );
 
 .root {
@@ -88,11 +87,11 @@ $key-text-colors: (
   text-transform: uppercase;
 }
 
-@each $name, $value in $key-colors {
+@each $name, $value in $key-styles {
   .#{$name} {
-    background-color: $value;
-    border-color: map.get($key-border-colors, $name);
-    color: map.get($key-text-colors, $name);
+    background-color: map.get($value, background);
+    border-color: map.get($value, border);
+    color: map.get($value, text);
   }
 }
 

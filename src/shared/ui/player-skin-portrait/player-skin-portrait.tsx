@@ -6,6 +6,12 @@ import { EASING } from "@/shared/ui/animations";
 
 import styles from "./styles.module.scss";
 
+const UNDERLINE_TRANSITION = {
+  delay: 0.15,
+  duration: 0.3,
+  ease: EASING.out,
+};
+
 export interface IPlayerSkinPortraitProps {
   src: string;
   name: string;
@@ -23,6 +29,10 @@ function PlayerSkinPortrait({
 }: IPlayerSkinPortraitProps) {
   const rootClassName = cn(styles.root, active && styles.active);
 
+  const underileAnimation = {
+    width: active ? "calc(100% + 40px)" : "0%",
+  };
+
   return (
     <button
       type="button"
@@ -38,14 +48,8 @@ function PlayerSkinPortrait({
 
       <motion.span
         className={styles.underline}
-        animate={{
-          width: active ? "calc(100% + 40px)" : "0%",
-        }}
-        transition={{
-          delay: 0.15,
-          duration: 0.3,
-          ease: EASING.out,
-        }}
+        animate={underileAnimation}
+        transition={UNDERLINE_TRANSITION}
       />
     </button>
   );

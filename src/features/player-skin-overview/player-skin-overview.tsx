@@ -1,15 +1,7 @@
 import cn from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import { FaAngleDown } from "react-icons/fa";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  type TransitionEvent,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { usePlayer } from "@/services/player";
 import {
@@ -21,50 +13,17 @@ import PlayerSkinName from "@/shared/ui/player-skin-name";
 import Section from "@/shared/ui/section";
 import Option from "@/shared/ui/option";
 
-import { EASING } from "@/shared/ui/animations";
 import { useBreakpoints } from "@/shared/hooks";
 
+import { useOverviewCollapse } from "./hooks";
+import {
+  DISAPPEAR_ANIMATION,
+  getCurrentSkinPosition,
+  getOverviewAnimation,
+  GUISE_APPLY_VARIANTS,
+  GUISE_VARIANTS,
+} from "./utils";
 import styles from "./styles.module.scss";
-
-const APPEAR_ANIMATION = {
-  x: 0,
-  opacity: 1,
-  visibility: "visible",
-  transition: { duration: 0.3, ease: EASING.out },
-};
-
-const DISAPPEAR_ANIMATION = {
-  x: -20,
-  opacity: 0,
-  transition: { duration: 0.2, ease: EASING.out },
-  transitionEnd: { visibility: "hidden" },
-};
-
-const GUISE_VARIANTS = {
-  initial: { opacity: 0 },
-  animate: {
-    opacity: 1,
-    transition: { duration: 0.2, ease: EASING.out },
-  },
-  exit: {
-    opacity: 0,
-    transition: { duration: 0.15, ease: EASING.standard },
-  },
-};
-
-const GUISE_APPLY_VARIANTS = {
-  initial: { opacity: 0 },
-  animate: {
-    opacity: 1,
-    transition: { duration: 0.25, ease: EASING.out },
-  },
-  exit: {
-    opacity: 0,
-    transition: { duration: 0.2, ease: EASING.standard },
-  },
-};
-
-const COLLAPSED_HEIGHT = 150;
 
 export interface IPlayerSkinOverviewProps {
   skin?: TPlayerSkin;
@@ -87,155 +46,60 @@ export function PlayerSkinOverview({
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const [isPickerOpen, setPickerOpen] = useState<boolean>(false);
-  const [isExpanded, setExpanded] = useState<boolean>(false);
-  const [isAnimating, setAnimating] = useState<boolean>(false);
-  const [contentHeight, setContentHeight] = useState<number>(0);
+  const [isPickerOpen, setPickerOpen] = useState(false);
 
   const { isTablet, isMobile } = useBreakpoints();
 
-  const guiseOptions = getGuises();
-
   const rootClassName = cn(styles.root, className);
 
-  const canCollapsable = isTablet || isMobile;
+  const canCollapse = isTablet || isMobile;
 
-  const totalSkins = skins.length;
-  const currentIndex =
-    Math.max(
-      0,
-      skins.findIndex((s) => s.id === skin?.id)
-    ) + 1;
+  const animation = useMemo(() => getOverviewAnimation(visible), [visible]);
+
+  const guiseOptions = getGuises();
+  const { totalSkins, currentIndex } = useMemo(
+    () => getCurrentSkinPosition(skins, skin?.id),
+    [skins, skin?.id]
+  );
 
   const currentGuise = getSkinGuise(selectedSkinId);
 
-  const measureContentHeight = useCallback(() => {
-    if (!canCollapsable) {
-      return;
-    }
-
-    const node = contentRef.current;
-
-    if (!node) {
-      return;
-    }
-
-    setContentHeight(node.scrollHeight);
-  }, [canCollapsable]);
-
-  const scheduleContentHeightMeasurement = useCallback(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        measureContentHeight();
-      });
-    });
-  }, [measureContentHeight]);
-
-  const animation = useMemo(() => {
-    return visible ? APPEAR_ANIMATION : DISAPPEAR_ANIMATION;
-  }, [visible]);
-
-  const showGradient = useMemo(() => {
-    if (!canCollapsable) {
-      return false;
-    }
-
-    return !isExpanded || isAnimating;
-  }, [isAnimating, isExpanded, canCollapsable]);
-
-  const collapseStyles = useMemo(() => {
-    if (!canCollapsable) {
-      return undefined;
-    }
-
-    const expandedHeight = `${Math.max(contentHeight, COLLAPSED_HEIGHT + 1)}px`;
-
-    return {
-      "--collapse-mask-opacity": showGradient ? 0 : 1,
-      maxHeight: isExpanded ? expandedHeight : `${COLLAPSED_HEIGHT}px`,
-      overflow: showGradient ? "hidden" : "visible",
-      cursor: isExpanded ? "auto" : "pointer",
-    };
-  }, [contentHeight, isExpanded, canCollapsable, showGradient]);
-
-  const handleToggleExpand = (nextState: boolean) => {
-    if (!canCollapsable) {
-      return;
-    }
-
-    if (nextState === isExpanded) {
-      return;
-    }
-
-    setAnimating(true);
-    setExpanded(nextState);
-  };
-
-  const handleTransitionEnd = (event: TransitionEvent<HTMLDivElement>) => {
-    if (event.target !== rootRef.current) {
-      return;
-    }
-
-    if (event.propertyName !== "max-height") {
-      return;
-    }
-
-    setAnimating(false);
-  };
-
-  useLayoutEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    if (!canCollapsable) {
-      return;
-    }
-
-    const node = contentRef.current;
-
-    if (!node) {
-      return;
-    }
-
-    measureContentHeight();
-
-    if (typeof ResizeObserver === "undefined") {
-      return;
-    }
-
-    const observer = new ResizeObserver(() => {
-      measureContentHeight();
-    });
-
-    observer.observe(node);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [
-    canCollapsable,
-    isPickerOpen,
-    effects.length,
-    guiseOptions.length,
+  const {
+    collapseStyles,
+    isExpanded,
+    handleToggleExpand,
+    handleTransitionEnd,
+    scheduleContentHeightMeasurement,
+    resetAnimation,
+  } = useOverviewCollapse({
+    canCollapse,
+    rootRef,
+    contentRef,
+    effectsLength: effects.length,
+    guiseOptionsLength: guiseOptions.length,
     selectedSkinId,
-    measureContentHeight,
-  ]);
+  });
+
+  const handleCollapseOnce = useCallback(() => {
+    if (!canCollapse || isExpanded) {
+      return;
+    }
+
+    handleToggleExpand(true);
+  }, [canCollapse, isExpanded, handleToggleExpand]);
+
+  const handleCollapseToggle = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      handleToggleExpand(!isExpanded);
+    },
+    [isExpanded, handleToggleExpand]
+  );
 
   useEffect(() => {
     setPickerOpen(false);
-    setAnimating(false);
-  }, [selectedSkinId]);
-
-  useEffect(() => {
-    if (!canCollapsable) {
-      setAnimating(false);
-    }
-  }, [canCollapsable]);
+    resetAnimation();
+  }, [selectedSkinId, resetAnimation]);
 
   return (
     <motion.div
@@ -245,24 +109,15 @@ export function PlayerSkinOverview({
       animate={animation}
       className={rootClassName}
       onTransitionEnd={handleTransitionEnd}
-      onClick={() => {
-        if (!canCollapsable || isExpanded) {
-          return;
-        }
-
-        handleToggleExpand(true);
-      }}
+      onClick={handleCollapseOnce}
     >
-      {canCollapsable && (
+      {canCollapse && (
         <button
           type="button"
           className={styles.collapseToggle}
           aria-expanded={isExpanded}
           aria-label={isExpanded ? "Collapse" : "Expand"}
-          onClick={(event) => {
-            event.stopPropagation();
-            handleToggleExpand(!isExpanded);
-          }}
+          onClick={handleCollapseToggle}
         >
           <FaAngleDown />
         </button>
@@ -296,14 +151,14 @@ export function PlayerSkinOverview({
                 </motion.div>
               )}
 
-              {skin && canCollapsable && (
+              {skin && canCollapse && (
                 <PlayerSkinName
                   level={skin?.level ?? 0}
                   rank={skin?.rank ?? ""}
                   name={(skin?.name ?? "").toUpperCase()}
                   subtitle="RANK"
                   className={styles.playerSkinName}
-                  visible={canCollapsable}
+                  visible={canCollapse}
                 />
               )}
             </div>

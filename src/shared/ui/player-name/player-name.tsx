@@ -10,6 +10,11 @@ import styles from "./styles.module.scss";
 
 let hasPlayerNameAnimated = false;
 
+const DEFAULT_MOTION_CONFIG = {
+  initial: false,
+  animate: { opacity: 1, x: 0 },
+};
+
 export interface IPlayerNameProps {
   name?: string;
   avatarSrc?: string;
@@ -22,6 +27,7 @@ function PlayerName({
   className,
 }: IPlayerNameProps) {
   const navigate = useNavigate();
+
   const [shouldAnimate, setShouldAnimate] = useState(
     () => !hasPlayerNameAnimated
   );
@@ -43,10 +49,7 @@ function PlayerName({
     <motion.div
       {...(shouldAnimate
         ? appearRight({ distance: 16, duration: 0.45, delay: 0.16 })
-        : {
-            initial: false,
-            animate: { opacity: 1, x: 0 },
-          })}
+        : DEFAULT_MOTION_CONFIG)}
       className={className}
       onClick={handleClick}
     >

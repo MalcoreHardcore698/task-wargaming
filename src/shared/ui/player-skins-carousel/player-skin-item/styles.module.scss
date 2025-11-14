@@ -1,0 +1,29 @@
+@use "@/shared/styles" as *;
+
+.item {
+  display: grid;
+  place-items: center;
+}
+
+.item>* {
+  transform-origin: center;
+  transition: transform 200ms ease;
+}
+
+.active>* {
+  position: relative;
+
+  border: 2px solid var(--color-white);
+  box-shadow: 0 0 28px rgb(255 255 255 / 45%),
+    inset 0 0 18px rgb(255 255 255 / 25%);
+  transform: translateX(14px) scale(calc(var(--selector-size) / 100px));
+}
+
+.horizontalActive>* {
+  transform: translateY(-8px) scale(calc(var(--selector-size) / 100px));
+}
+
+.dimmed {
+  opacity: 0.5;
+  transition: opacity 200ms ease;
+}

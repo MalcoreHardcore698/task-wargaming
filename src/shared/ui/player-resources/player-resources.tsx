@@ -33,11 +33,13 @@ function PlayerResources({ resources = [], className }: IPlayerResourcesProps) {
           <span style={{ color: resource.color }} className={styles.amount}>
             {formatResourceValue(resource.value, resource.format)}
           </span>
+
           <img
             src={resource.icon}
             alt={resource.label}
             className={styles.icon}
           />
+
           {resource.hasNew && (
             <div className={styles.hasNewTag}>
               <div className={styles.hasNewContainer}>
