@@ -85,5 +85,13 @@ $root-offset-mobile: 8px;
   .bars {
     align-items: start;
     gap: 24px;
+
+    .playerName {
+      width: 30%;
+    }
+
+    .playerResources {
+      width: 70%;
+    }
   }
 }

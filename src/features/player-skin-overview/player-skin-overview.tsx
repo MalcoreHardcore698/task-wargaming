@@ -364,20 +364,22 @@ export function PlayerSkinOverview({
           </AnimatePresence>
         </div>
 
-        {effects.length > 0 && (
-          <Section title="VISUAL AND SOUND EFFECTS">
-            <div className={styles.options}>
-              {effects.map((effect) => (
-                <Option
-                  key={effect.id}
-                  icon={effect.icon}
-                  title={effect.title}
-                  description={effect.description}
-                />
-              ))}
-            </div>
-          </Section>
-        )}
+        <AnimatePresence mode="wait">
+          {effects.length > 0 && !isPickerOpen && (
+            <Section title="VISUAL AND SOUND EFFECTS">
+              <div className={styles.options}>
+                {effects.map((effect) => (
+                  <Option
+                    key={effect.id}
+                    icon={effect.icon}
+                    title={effect.title}
+                    description={effect.description}
+                  />
+                ))}
+              </div>
+            </Section>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );

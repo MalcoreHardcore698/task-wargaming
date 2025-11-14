@@ -1,3 +1,4 @@
+import cn from "classnames";
 import { useNavigate } from "react-router-dom";
 
 import { ERoutePath } from "@/app/routes/types";
@@ -8,17 +9,20 @@ import styles from "./styles.module.scss";
 
 export interface IPlayerResourcesProps {
   resources?: TPlayerResource[];
+  className?: string;
 }
 
-function PlayerResources({ resources = [] }: IPlayerResourcesProps) {
+function PlayerResources({ resources = [], className }: IPlayerResourcesProps) {
   const navigate = useNavigate();
+
+  const rootClassName = cn(styles.root, className);
 
   const handleClick = () => {
     navigate(ERoutePath.SHOP);
   };
 
   return (
-    <div className={styles.root}>
+    <div className={rootClassName}>
       {resources.map((resource: TPlayerResource) => (
         <div
           key={resource.id}

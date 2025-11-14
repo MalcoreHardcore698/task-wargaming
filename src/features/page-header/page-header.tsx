@@ -82,7 +82,10 @@ function PageHeader({
               })}
           className={styles.bars}
         >
-          <PlayerResources resources={resources} />
+          <PlayerResources
+            resources={resources}
+            className={styles.playerResources}
+          />
           <PlayerName name={user.name} className={styles.playerName} />
         </motion.div>
       </div>
