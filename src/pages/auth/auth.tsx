@@ -35,6 +35,7 @@ function AuthPage() {
           <input
             value={name}
             placeholder="Type name"
+            maxLength={20}
             onChange={(e) => setName(e.target.value)}
             disabled={isLoading}
             autoComplete="off"

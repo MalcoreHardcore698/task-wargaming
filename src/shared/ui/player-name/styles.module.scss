@@ -32,7 +32,18 @@
 }
 
 .name {
+  @include text-truncate;
+
+  min-width: 120px;
+  max-width: 150px;
+
   color: var(--color-white);
   font-size: 16px;
   font-weight: var(--font-weight-semibold);
+}
+
+@include respond-to('tablet') {
+  .name {
+    max-width: 250px;
+  }
 }
