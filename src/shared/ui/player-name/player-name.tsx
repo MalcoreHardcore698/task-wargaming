@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 import { ERoutePath } from "@/app/routes/types";
+import defaultAvatar from "@/assets/images/avatar.png";
 import { appearRight } from "@/shared/ui";
 
 import styles from "./styles.module.scss";
@@ -17,7 +18,7 @@ export interface IPlayerNameProps {
 
 function PlayerName({
   name = "test_ivcy",
-  avatarSrc = "/src/assets/images/avatar.png",
+  avatarSrc = defaultAvatar,
   className,
 }: IPlayerNameProps) {
   const navigate = useNavigate();

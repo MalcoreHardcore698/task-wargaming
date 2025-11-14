@@ -15,12 +15,43 @@ class PlayerService {
 
   constructor() {
     const initial = this.load() ?? this.defaultState();
-    this.state = this.migrateState(initial);
+    const migrated = this.migrateState(initial);
+    this.state = migrated;
+    this.save(migrated);
   }
 
   private migrateState(state: TPlayerState): TPlayerState {
+    const storedResources = state.resources?.length
+      ? state.resources
+      : PLAYER_RESOURCES;
+
+    const defaultResourceById = new Map(
+      PLAYER_RESOURCES.map((resource) => [resource.id, resource])
+    );
+
+    const resources = storedResources.map((resource) => {
+      const defaults = defaultResourceById.get(resource.id);
+
+      if (!defaults) {
+        return resource;
+      }
+
+      return {
+        ...defaults,
+        amount: resource.amount,
+        hasNew: resource.hasNew,
+        color: resource.color,
+      };
+    });
+
+    const defaultIds = new Set(storedResources.map((resource) => resource.id));
+
+    const missingResources = PLAYER_RESOURCES.filter(
+      (resource) => !defaultIds.has(resource.id)
+    );
+
     return {
-      resources: state.resources,
+      resources: [...resources, ...missingResources],
       selectedSkinId: state.selectedSkinId,
       skinGuiseById: state.skinGuiseById ?? {},
     };

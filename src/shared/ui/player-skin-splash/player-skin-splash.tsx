@@ -2,6 +2,7 @@ import cn from "classnames";
 import { motion } from "framer-motion";
 
 import { EASING } from "@/shared/ui/animations";
+import defaultSplash from "@/assets/images/skins/poseidon.png";
 
 import styles from "./styles.module.scss";
 
@@ -29,7 +30,7 @@ export interface IPlayerSkinSplashProps {
 }
 
 function PlayerSkinSplash({
-  src = "/src/assets/images/skins/poseidon.png",
+  src = defaultSplash,
   alt = "Skin splash",
   className,
   visible = true,
