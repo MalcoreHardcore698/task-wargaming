@@ -242,3 +242,10 @@ $guise-icon-size: 24px;
     display: inline-flex;
   }
 }
+
+@include respond-to('laptop', 'tablet') {
+  .root {
+    --player-skin-overview-scale: 1;
+    @include fluid-scale-height(0.85, 1, $breakpoint-mobile, $breakpoint-laptop, top left, --player-skin-overview-scale);
+  }
+}

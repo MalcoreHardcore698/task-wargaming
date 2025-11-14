@@ -2,7 +2,7 @@
 
 .root {
   @include flex-container(row, end, center);
-  @include fluid-scale(0.75, 1, 320px, 1440px, right);
+  @include fluid-scale(0.75, 1, $breakpoint-lower-limit, $breakpoint-pre-upper-limit, right);
 
   flex-wrap: wrap;
   gap: 10px 16px;

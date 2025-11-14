@@ -2,7 +2,7 @@
 
 .container {
   @include flex-container(column, center, start);
-  @include fluid-scale(0.75, 1);
+  @include fluid-scale(0.75, 1, $breakpoint-lower-limit, $breakpoint-pre-upper-limit);
 
   gap: 12px;
 
@@ -57,7 +57,7 @@
 }
 
 .splash {
-  @include fluid-scale(0.85, 1, 320px, 1440px, left);
+  @include fluid-scale(0.85, 1, $breakpoint-lower-limit, $breakpoint-pre-upper-limit, left);
 
   max-height: 85vh;
 

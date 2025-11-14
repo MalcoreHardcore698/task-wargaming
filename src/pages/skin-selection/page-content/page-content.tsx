@@ -1,6 +1,6 @@
 import type { Ref } from "react";
 
-import { useBreakpoints } from "@/shared/hooks";
+import { useApp } from "@/services/app";
 import type { TPlayerSkin } from "@/services/player-skins";
 import { PlayerSkinSplash, PlayerSkinsCarousel } from "@/shared/ui";
 import PlayerSkinOverview from "@/features/player-skin-overview";
@@ -30,7 +30,9 @@ function PageContent({
   onSkinSelect,
   carouselRef,
 }: IPageContentProps) {
-  const { isLaptop, isTablet, isMobile } = useBreakpoints();
+  const { breakpoints } = useApp();
+
+  const { isLaptop, isTablet, isMobile } = breakpoints;
 
   const isHorizontal = isLaptop || isTablet || isMobile;
   const direction = isHorizontal ? "horizontal" : "vertical";

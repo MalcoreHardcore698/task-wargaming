@@ -109,3 +109,13 @@
   --outline-offset: 2px;
   --outline-color-inverse: var(--color-white);
 }
+
+/* Breakpoints */
+$breakpoint-lower-limit: 320px;
+$breakpoint-pre-lower-limit: 475px;
+$breakpoint-mobile: 640px;
+$breakpoint-tablet: 768px;
+$breakpoint-laptop: 1024px;
+$breakpoint-desktop: 1280px;
+$breakpoint-pre-upper-limit: 1440px;
+$breakpoint-upper-limit: 1920px;

@@ -21,7 +21,11 @@
 /// @param {Length} $min-screen - viewport width where scaling starts
 /// @param {Length} $max-screen - viewport width where scaling ends
 /// @param {String} $origin - transform-origin for the element
-@mixin fluid-scale($min-scale, $max-scale, $min-screen: 320px, $max-screen: 1440px, $origin: center) {
+@mixin fluid-scale($min-scale,
+  $max-scale,
+  $min-screen: $breakpoint-lower-limit,
+  $max-screen: $breakpoint-pre-upper-limit,
+  $origin: center) {
   @if $min-scale >$max-scale {
     @warn "Minimum scale value (#{$min-scale}) cannot exceed maximum (#{$max-scale}).";
   }
@@ -35,6 +39,41 @@
 
     transform-origin: $origin;
     transform: scale(clamp($min-scale, #{$preferred}, $max-scale));
+  }
+}
+
+/// Mixin for scaling an element by viewport height
+/// @param {Number} $min-scale - minimum scale value
+/// @param {Number} $max-scale - maximum scale value
+/// @param {Length} $min-height - height at which the minimum scale is applied
+/// @param {Length} $max-height - height at which the maximum scale is reached
+/// @param {String} $origin - transform-origin of the element
+/// @param {String} $custom-property - CSS variable for storing the scale
+@mixin fluid-scale-height($min-scale,
+  $max-scale,
+  $min-height: $breakpoint-mobile,
+  $max-height: $breakpoint-desktop,
+  $origin: center,
+  $custom-property: --viewport-height-scale) {
+  @if $min-scale >$max-scale {
+    @warn "Minimum scale value (#{$min-scale}) cannot exceed maximum (#{$max-scale}).";
+  }
+
+  @else if $min-height >=$max-height {
+    @warn "Minimum height (#{$min-height}) must be less than maximum (#{$max-height}).";
+  }
+
+  @else {
+    $progress: clamp(0,
+        (100vh - #{$min-height}) / (#{$max-height} - #{$min-height}),
+        1);
+
+    #{$custom-property}: clamp(#{$min-scale},
+      calc(#{$min-scale} + ((#{$max-scale} - #{$min-scale}) * #{$progress})),
+      #{$max-scale});
+
+    transform-origin: $origin;
+    transform: scale(var(#{$custom-property}, 1));
   }
 }
 

@@ -2,7 +2,7 @@
 
 .container {
   @include flex-container(row, start, center);
-  @include fluid-scale(0.75, 1, 320px, 1440px, left);
+  @include fluid-scale(0.75, 1, $breakpoint-lower-limit, $breakpoint-pre-upper-limit, left);
   @include interactable;
 
   position: relative;

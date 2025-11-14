@@ -22,7 +22,7 @@
   .root {
     justify-content: center;
 
-    min-height: 320px;
+    min-height: $breakpoint-lower-limit;
   }
 
   .image {

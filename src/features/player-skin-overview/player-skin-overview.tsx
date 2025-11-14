@@ -1,8 +1,9 @@
 import cn from "classnames";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type MotionProps } from "framer-motion";
 import { FaAngleDown } from "react-icons/fa";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { useApp } from "@/services/app";
 import { usePlayer } from "@/services/player";
 import {
   type TPlayerSkin,
@@ -12,8 +13,6 @@ import {
 import PlayerSkinName from "@/shared/ui/player-skin-name";
 import Section from "@/shared/ui/section";
 import Option from "@/shared/ui/option";
-
-import { useBreakpoints } from "@/shared/hooks";
 
 import { useOverviewCollapse } from "./hooks";
 import {
@@ -41,28 +40,45 @@ export function PlayerSkinOverview({
   className,
   visible = true,
 }: IPlayerSkinOverviewProps) {
-  const { selectedSkinId, getSkinGuise, setSkinGuise } = usePlayer();
+  const { getSkinGuise, setSkinGuise } = usePlayer();
   const { skins, getGuises } = usePlayerSkins();
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [isPickerOpen, setPickerOpen] = useState(false);
 
-  const { isTablet, isMobile } = useBreakpoints();
+  const { breakpoints } = useApp();
+  const { isTablet, isMobile } = breakpoints;
 
   const rootClassName = cn(styles.root, className);
 
   const canCollapse = isTablet || isMobile;
 
   const animation = useMemo(() => getOverviewAnimation(visible), [visible]);
+  const transformTemplate = useCallback<
+    NonNullable<MotionProps["transformTemplate"]>
+  >((_props, transform) => {
+    const scaleValue = "scale(var(--player-skin-overview-scale, 1))";
 
+    const trimmed = typeof transform === "string" ? transform.trim() : "";
+
+    if (trimmed && trimmed !== "none") {
+      return `${scaleValue} ${trimmed}`;
+    }
+
+    return scaleValue;
+  }, []);
+
+  const displayedSkinId = skin?.id;
   const guiseOptions = getGuises();
   const { totalSkins, currentIndex } = useMemo(
     () => getCurrentSkinPosition(skins, skin?.id),
     [skins, skin?.id]
   );
 
-  const currentGuise = getSkinGuise(selectedSkinId);
+  const currentGuise = displayedSkinId
+    ? getSkinGuise(displayedSkinId)
+    : undefined;
 
   const {
     collapseStyles,
@@ -77,7 +93,7 @@ export function PlayerSkinOverview({
     contentRef,
     effectsLength: effects.length,
     guiseOptionsLength: guiseOptions.length,
-    selectedSkinId,
+    selectedSkinId: displayedSkinId,
   });
 
   const handleCollapseOnce = useCallback(() => {
@@ -99,7 +115,7 @@ export function PlayerSkinOverview({
   useEffect(() => {
     setPickerOpen(false);
     resetAnimation();
-  }, [selectedSkinId, resetAnimation]);
+  }, [displayedSkinId, resetAnimation]);
 
   return (
     <motion.div
@@ -108,6 +124,7 @@ export function PlayerSkinOverview({
       initial={DISAPPEAR_ANIMATION}
       animate={animation}
       className={rootClassName}
+      transformTemplate={transformTemplate}
       onTransitionEnd={handleTransitionEnd}
       onClick={handleCollapseOnce}
     >
@@ -206,7 +223,11 @@ export function PlayerSkinOverview({
                         title={guiseOption.label}
                         description={guiseOption.description}
                         onClick={() => {
-                          setSkinGuise(selectedSkinId, guiseOption.type);
+                          if (!displayedSkinId) {
+                            return;
+                          }
+
+                          setSkinGuise(displayedSkinId, guiseOption.type);
                           setPickerOpen(false);
                           scheduleContentHeightMeasurement();
                         }}

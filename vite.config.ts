@@ -5,7 +5,6 @@ import compression from "vite-plugin-compression2";
 import { resolve } from "path";
 
 export default defineConfig({
-  // Базовый путь для GitHub Pages (имя репозитория)
   base: process.env.NODE_ENV === "production" ? "/task-wargaming/" : "/",
   plugins: [
     react(),
@@ -64,15 +63,12 @@ export default defineConfig({
       },
     },
   },
-  // Настройки для GitHub Pages и итоговой сборки
   build: {
     outDir: "dist",
     sourcemap: false,
-    // Производственная оптимизация бандла
     minify: "terser",
     rollupOptions: {
       output: {
-        // Разделение чанков для улучшения кеширования
         manualChunks: {
           vendor: ["react", "react-dom"],
           router: ["react-router-dom"],

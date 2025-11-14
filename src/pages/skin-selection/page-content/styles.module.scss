@@ -26,6 +26,14 @@
   }
 }
 
+@include respond-to('tablet') {
+  .aside {
+    .playerSkinOverview {
+      top: 64px;
+    }
+  }
+}
+
 @include respond-to('laptop', 'tablet') {
   .playerSkinSplash {
     min-width: 50vw;
@@ -46,6 +54,7 @@
       position: fixed;
       left: -25%;
       bottom: 60px;
+      z-index: 1;
     }
 
     .playerSkinOverview {
@@ -96,6 +105,16 @@
   }
 }
 
+
+@include respond-to('laptop', 'mobile') {
+  .aside {
+    .playerSkinCarousel {
+      --player-skin-overview-scale: 1;
+      @include fluid-scale-height(0.45, 1, $breakpoint-mobile, $breakpoint-desktop, bottom center, --player-skin-overview-scale);
+    }
+  }
+}
+
 @include respond-to('mobile') {
   .playerSkinSplash {
     top: -15vh;
@@ -124,5 +143,9 @@
     gap: 16px;
 
     bottom: 16px;
+
+    .playerSkinOverview {
+      top: 0;
+    }
   }
 }

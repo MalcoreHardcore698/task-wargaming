@@ -52,7 +52,7 @@
 
 @include respond-to('desktop', 'tablet') {
   .container {
-    @include fluid-scale(0.5, 1, 320px, 1440px, left);
+    @include fluid-scale(0.5, 1, $breakpoint-lower-limit, $breakpoint-pre-upper-limit, left);
 
     gap: 6px;
 
@@ -68,7 +68,7 @@
   }
 
   .container {
-    @include fluid-scale(0.75, 1, 160px, 768px, left);
+    @include fluid-scale(0.75, 1, 160px, $breakpoint-tablet, left);
 
     gap: 2px;
 

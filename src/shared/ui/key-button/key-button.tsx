@@ -2,7 +2,7 @@ import { useRef } from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import cn from "classnames";
 
-import useBreakpoints from "@/shared/hooks/use-breakpoints";
+import { useApp } from "@/services/app";
 
 import { useKeyboardActivation } from "./hooks";
 import styles from "./styles.module.scss";
@@ -29,7 +29,8 @@ function KeyButton({
 }: IKeyButtonProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const { isMobile } = useBreakpoints();
+  const { breakpoints } = useApp();
+  const { isMobile } = breakpoints;
 
   const rootClassName = cn(styles.root, className);
 
