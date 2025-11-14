@@ -2,12 +2,13 @@ import { useEffect } from "react";
 
 import type { IPageSEOProps } from "./types";
 
-export const DEFAULT_PAGE_SEO: IPageSEOProps = {
-  title: "React Auth App - Secure Authentication",
+const DEFAULT_PAGE_SEO: IPageSEOProps = {
+  title: "Test Task Wargaming - World of Warships: Legends Commander Skins",
   description:
-    "A modern React authentication application with secure login, registration, and password reset functionality.",
-  keywords: "react, authentication, login, register, password reset, security",
-  author: "React Auth App",
+    "Interactive showcase of commander skins for World of Warships: Legends created for the Test Task Wargaming challenge.",
+  keywords:
+    "world of warships legends, commander skins, test task wargaming, react showcase",
+  author: "Test Task Wargaming",
   type: "website" as const,
   twitterCard: "summary_large_image" as const,
   ogLocale: "en_US",
@@ -37,7 +38,7 @@ function PageSEO({
   const finalKeywords = keywords || DEFAULT_PAGE_SEO.keywords || "";
   const finalAuthor = author || DEFAULT_PAGE_SEO.author || "";
   const finalUrl = url || window.location.href;
-  const finalImage = image || "/og-image.jpg" || "";
+  const finalImage = image || "/og-image.png";
 
   useEffect(() => {
     document.title = finalTitle;
@@ -116,7 +117,7 @@ function PageSEO({
         "@type": "Organization",
         name: finalAuthor,
       },
-      applicationCategory: "SecurityApplication",
+      applicationCategory: "GameApplication",
       operatingSystem: "Web Browser",
     };
 

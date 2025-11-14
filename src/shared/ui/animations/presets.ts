@@ -1,8 +1,8 @@
-import type { Transition } from "framer-motion";
+import type { TargetAndTransition, Transition } from "framer-motion";
 
 export type TMotionPreset = {
-  initial: any;
-  animate: any;
+  initial: TargetAndTransition;
+  animate: TargetAndTransition;
   transition: Transition;
 };
 
