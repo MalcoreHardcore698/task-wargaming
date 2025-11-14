@@ -1,4 +1,4 @@
-import type { Ref } from "react";
+import { useEffect, useRef, type Ref } from "react";
 
 import { useApp } from "@/services/app";
 import type { TPlayerSkin } from "@/services/player-skins";
@@ -32,10 +32,32 @@ function PageContent({
 }: IPageContentProps) {
   const { breakpoints } = useApp();
 
+  const preloadedSplashImagesRef = useRef<Record<string, HTMLImageElement>>({});
+
   const { isLaptop, isTablet, isMobile } = breakpoints;
 
   const isHorizontal = isLaptop || isTablet || isMobile;
   const direction = isHorizontal ? "horizontal" : "vertical";
+
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof Image === "undefined") {
+      return;
+    }
+
+    skins
+      .map((skin) => skin.splashImage)
+      .filter((src): src is string => Boolean(src))
+      .forEach((src) => {
+        if (preloadedSplashImagesRef.current[src]) {
+          return;
+        }
+
+        const image = new Image();
+        image.src = src;
+
+        preloadedSplashImagesRef.current[src] = image;
+      });
+  }, [skins]);
 
   return (
     <div className={styles.root}>

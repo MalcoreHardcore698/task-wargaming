@@ -45,7 +45,9 @@ export function PlayerSkinOverview({
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
+
   const [isPickerOpen, setPickerOpen] = useState(false);
+  const [isPickerTransitioning, setPickerTransitioning] = useState(false);
 
   const { breakpoints } = useApp();
   const { isTablet, isMobile } = breakpoints;
@@ -114,6 +116,7 @@ export function PlayerSkinOverview({
 
   useEffect(() => {
     setPickerOpen(false);
+    setPickerTransitioning(false);
     resetAnimation();
   }, [displayedSkinId, resetAnimation]);
 
@@ -182,7 +185,10 @@ export function PlayerSkinOverview({
           </AnimatePresence>
         </div>
         <div className={styles.guiseApply}>
-          <AnimatePresence mode="wait">
+          <AnimatePresence
+            mode="wait"
+            onExitComplete={() => setPickerTransitioning(false)}
+          >
             {!isPickerOpen && (
               <motion.button
                 key="guise-picker-toggle"
@@ -192,6 +198,7 @@ export function PlayerSkinOverview({
                 animate="animate"
                 exit="exit"
                 onClick={() => {
+                  setPickerTransitioning(true);
                   setPickerOpen((v) => !v);
                   scheduleContentHeightMeasurement();
                 }}
@@ -228,6 +235,7 @@ export function PlayerSkinOverview({
                           }
 
                           setSkinGuise(displayedSkinId, guiseOption.type);
+                          setPickerTransitioning(true);
                           setPickerOpen(false);
                           scheduleContentHeightMeasurement();
                         }}
@@ -241,7 +249,7 @@ export function PlayerSkinOverview({
         </div>
 
         <AnimatePresence mode="wait">
-          {effects.length > 0 && !isPickerOpen && (
+          {effects.length > 0 && !isPickerOpen && !isPickerTransitioning && (
             <Section title="VISUAL AND SOUND EFFECTS">
               <div className={styles.options}>
                 {effects.map((effect) => (
