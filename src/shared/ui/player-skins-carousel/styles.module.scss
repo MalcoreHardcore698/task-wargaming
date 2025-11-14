@@ -1,0 +1,70 @@
+@use '@/shared/styles' as *;
+
+.root {
+  --selector-size: 128px;
+  --portrait-gap: 86px;
+
+  position: relative;
+
+  display: grid;
+  align-content: start;
+  justify-items: center;
+
+  height: calc(var(--selector-size) * 3 + var(--portrait-gap) * 2);
+
+  outline: none;
+}
+
+.carousel {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--portrait-gap);
+  will-change: transform;
+}
+
+.item {
+  display: grid;
+  place-items: center;
+}
+
+.item>* {
+  transform-origin: center;
+  transition: transform 200ms ease;
+}
+
+.activeItem>* {
+  position: relative;
+
+  border: 2px solid white;
+  box-shadow: 0 0 28px rgb(255 255 255 / 45%), inset 0 0 18px rgb(255 255 255 / 25%);
+  transform: translateX(14px) scale(calc(var(--selector-size) / 100px));
+}
+
+.dimmed {
+  opacity: 0.5;
+  transition: opacity 200ms ease;
+}
+
+.root.horizontal {
+  --selector-size: 120px;
+  --portrait-gap: 16px;
+
+  width: 100%;
+  height: var(--selector-size);
+  padding-inline: var(--space-l);
+}
+
+.root.horizontal .carousel {
+  display: inline-grid;
+  align-items: center;
+  justify-content: start;
+  grid-auto-flow: column;
+  gap: 48px;
+
+  will-change: transform;
+}
+
+.root.horizontal .activeItem>* {
+  transform: translateY(-8px) scale(calc(var(--selector-size) / 100px));
+}

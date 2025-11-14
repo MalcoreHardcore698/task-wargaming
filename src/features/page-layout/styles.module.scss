@@ -1,0 +1,10 @@
+@use '@/shared/styles' as *;
+
+.root {
+  @include flex-container(row, start, end);
+
+  position: relative;
+
+  min-height: 100vh;
+  max-height: 100vh;
+}

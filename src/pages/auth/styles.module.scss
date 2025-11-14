@@ -1,0 +1,52 @@
+@use '@/shared/styles' as *;
+
+$header-icon-size: 56px;
+
+.root {
+  @include flex-center;
+
+  min-height: 100vh;
+  padding: var(--space-l);
+}
+
+.container {
+  @include flex-container(column);
+
+  gap: var(--space-xl);
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-l);
+
+    width: 100%;
+    padding-inline: var(--space-xl);
+
+    input {
+      height: auto;
+      max-height: initial;
+
+      padding: 0;
+
+      border: none;
+      outline: none;
+      background: none;
+
+      font-size: 64px;
+      font-weight: var(--font-weight-bold);
+      text-align: center;
+      color: var(--color-primary);
+
+      &::placeholder {
+        color: var(--color-auth-text-light);
+      }
+    }
+
+    .playButton {
+      width: max-content;
+
+      padding-inline: 32px;
+    }
+  }
+}

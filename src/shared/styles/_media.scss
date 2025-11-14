@@ -1,0 +1,46 @@
+@use 'sass:map';
+$breakpoints: (
+  'extra-small': 475px,
+  'mobile': 640px,
+  'tablet': 768px,
+  'laptop': 1024px,
+  'desktop': 1280px) !default;
+
+/// Mixin to manage responsive breakpoints
+/// @param {String} $breakpoint - Upper breakpoint name (max-width)
+/// @param {String|null} $from - Optional lower breakpoint name (exclusive boundary)
+/// @require $breakpoints
+@mixin respond-to($breakpoint, $from: null) {
+  @if not map.has-key($breakpoints, $breakpoint) {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. Available breakpoints are: #{map.keys($breakpoints)}.";
+  }
+
+  @else if $from !=null and not map.has-key($breakpoints, $from) {
+    @warn "Unfortunately, no value could be retrieved from `#{$from}`. Available breakpoints are: #{map.keys($breakpoints)}.";
+  }
+
+  @else {
+    $max-width: map.get($breakpoints, $breakpoint
+    );
+
+  @if $from !=null {
+    $min-width: map.get($breakpoints, $from) + 1px;
+
+    @if $min-width >$max-width {
+      @warn "The lower breakpoint `#{$from}` exceeds upper breakpoint `#{$breakpoint}`.";
+    }
+
+    @else {
+      @media (min-width: #{$min-width}) and (max-width: #{$max-width}) {
+        @content;
+      }
+    }
+  }
+
+  @else {
+    @media (max-width: #{$max-width}) {
+      @content;
+    }
+  }
+}
+}

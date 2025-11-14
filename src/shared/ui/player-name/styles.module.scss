@@ -1,0 +1,38 @@
+@use '@/shared/styles' as *;
+
+.container {
+  @include flex-container(row, start, center);
+  @include fluid-scale(0.75, 1, 320px, 1440px, left);
+  @include interactable;
+
+  position: relative;
+  gap: 8px;
+
+  padding: 6px 8px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 7%;
+    left: 2px;
+
+    width: 4px;
+    height: 86%;
+
+    border-radius: 1px;
+    background: var(--color-white);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+  }
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.name {
+  color: var(--color-white);
+  font-size: 16px;
+  font-weight: var(--font-weight-semibold);
+}

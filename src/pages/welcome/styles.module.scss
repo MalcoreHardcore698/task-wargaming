@@ -1,0 +1,125 @@
+@use '@/shared/styles' as *;
+
+.container {
+  @include flex-container(column, center, start);
+  @include fluid-scale(0.75, 1);
+
+  gap: 12px;
+
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  height: -webkit-fill-available;
+
+  padding: 48px 128px;
+}
+
+.title {
+  position: relative;
+  left: -10px;
+
+  font-size: 132px;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.85;
+}
+
+.subtitle {
+  @include flex-container(row, center, center);
+
+  gap: 12px;
+
+  span {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.45em;
+
+    opacity: 0.75;
+  }
+
+  img {
+    @include interactable;
+
+    height: 40px;
+    object-fit: contain;
+
+    filter: saturate(0) invert(1);
+  }
+}
+
+.content {
+  position: relative;
+
+  margin-block-start: 24px;
+}
+
+.splash {
+  @include fluid-scale(0.85, 1, 320px, 1440px, left);
+
+  max-height: 85vh;
+
+  width: 100%;
+}
+
+@include respond-to('laptop') {
+  .container {
+    padding: 0;
+
+    margin-inline-start: -64px;
+
+    translate: 96px;
+  }
+}
+
+@include respond-to('tablet') {
+  .root {
+    position: relative;
+
+    &::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.85));
+    }
+  }
+
+  .container {
+    @include flex-container(column, center, center);
+
+    margin-inline-start: 0;
+    translate: 0;
+  }
+
+  .title {
+    left: 0;
+
+    text-align: center;
+  }
+
+  .subtitle {
+    justify-content: center;
+  }
+
+  .content {
+    text-align: center;
+  }
+
+  .splash {
+    position: absolute;
+    max-height: 85vh;
+
+    width: 100%;
+
+    img {
+      height: -webkit-fill-available;
+      object-position: center bottom;
+    }
+  }
+}

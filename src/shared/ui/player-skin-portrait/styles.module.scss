@@ -1,0 +1,81 @@
+@use '@/shared/styles' as *;
+
+$box-size: 100px;
+$active-box-size: 128px;
+
+.root {
+  @include reset-button;
+  @include reset-mobile-interactions;
+
+  position: relative;
+
+  width: $box-size;
+  height: $box-size;
+
+  border: 1px solid white;
+  background: rgb(0 0 0 / 25%);
+
+  transition: all 250ms ease;
+}
+
+.image {
+  position: relative;
+  bottom: 6px;
+
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius-md);
+
+  overflow: visible;
+}
+
+.equippedIcon {
+  position: absolute;
+  top: calc(50% - 7px);
+  left: -28px;
+
+  display: grid;
+  place-items: center;
+
+  font-size: 16px;
+
+  color: var(--color-white);
+}
+
+.underline {
+  position: absolute;
+  left: -2px;
+  bottom: -18px;
+
+  width: 0%;
+  height: 2px;
+
+  background: #2D333F;
+}
+
+@include respond-to('laptop', 'tablet') {
+  .equippedIcon {
+    top: calc(50% - 6px);
+    left: -18px;
+
+    font-size: 14px;
+  }
+
+  .underline {
+    display: none;
+  }
+}
+
+@include respond-to('tablet') {
+  .equippedIcon {
+    top: calc(50% - 5px);
+    left: -20px;
+
+    font-size: 12px;
+  }
+
+  .underline {
+    display: none;
+  }
+}

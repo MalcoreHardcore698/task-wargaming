@@ -1,0 +1,81 @@
+@use '@/shared/styles' as *;
+
+.root {
+  @include flex-container(row, end, center);
+  @include fluid-scale(0.75, 1, 320px, 1440px, right);
+
+  flex-wrap: wrap;
+  gap: 10px 16px;
+
+  width: 100%;
+
+  padding: 6px 18px;
+
+  pointer-events: none;
+  user-select: none;
+}
+
+.item {
+  @include flex-container(row, center, center);
+  @include interactable;
+
+  position: relative;
+
+  justify-self: end;
+  gap: var(--space-s);
+
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.amount {
+  font-size: var(--font-size-base);
+}
+
+.hasNewTag {
+  position: absolute;
+  top: -15px;
+  right: -8px;
+
+  display: inline-flex;
+  align-items: center;
+  overflow: visible;
+
+  .hasNewContainer {
+    position: relative;
+
+    .hasNew {
+      position: relative;
+      z-index: 1;
+
+      padding: 2px;
+
+      font-size: 7px;
+      font-weight: var(--font-weight-bold);
+      line-height: 1;
+      text-transform: uppercase;
+      color: var(--color-white);
+    }
+
+    svg {
+      position: absolute;
+      top: 4px;
+      left: -14px;
+
+      height: 100%;
+
+      scale: 0.55;
+    }
+  }
+}
+
+@include respond-to('tablet') {
+  .root {
+    padding-inline: 0 8px;
+  }
+}

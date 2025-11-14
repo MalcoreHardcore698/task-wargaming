@@ -1,0 +1,13 @@
+@use '@/shared/styles' as *;
+
+.background {
+  position: fixed;
+  inset: 0;
+
+  background-image: url('../../assets/images/bg-smoke-water.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  pointer-events: none;
+}

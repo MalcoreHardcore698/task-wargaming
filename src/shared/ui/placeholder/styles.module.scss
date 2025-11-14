@@ -1,0 +1,120 @@
+@use '@/shared/styles' as *;
+
+.root {
+  @include flex-container(column, center, center);
+
+  padding: var(--space-xl) var(--space-m);
+  text-align: center;
+
+  .icon {
+    margin-bottom: var(--space-m);
+    font-size: var(--size-m);
+    line-height: 1;
+    color: var(--color-auth-primary);
+  }
+
+  .title {
+    margin: 0 0 var(--space-s) 0;
+    font-weight: var(--font-weight-xl);
+    color: var(--color-auth-text);
+  }
+
+  .description {
+    margin: 0 0 var(--space-l) 0;
+    line-height: 1.5;
+    color: var(--color-auth-text-light);
+  }
+
+  .action {
+    margin-block-start: var(--space-s);
+  }
+
+  &.size {
+    &__small {
+      padding: var(--space-m) var(--space-s);
+
+      .icon {
+        margin-bottom: var(--space-s);
+        font-size: var(--size-s);
+      }
+
+      .title {
+        margin-bottom: var(--space-xs);
+        font-size: var(--font-size-m);
+      }
+
+      .description {
+        margin-bottom: var(--space-m);
+        font-size: var(--font-size-s);
+      }
+    }
+
+    &__medium {
+      padding: var(--space-xl) var(--space-m);
+
+      .icon {
+        margin-bottom: var(--space-m);
+        font-size: var(--size-m);
+      }
+
+      .title {
+        margin-bottom: var(--space-s);
+        font-size: var(--font-size-l);
+      }
+
+      .description {
+        margin-bottom: var(--space-l);
+        font-size: var(--font-size-m);
+      }
+    }
+
+    &__large {
+      padding: var(--space-3xl) var(--space-l);
+
+      .icon {
+        margin-bottom: var(--space-l);
+        font-size: var(--size-l);
+      }
+
+      .title {
+        margin-bottom: var(--space-m);
+        font-size: var(--font-size-xl);
+      }
+
+      .description {
+        margin-bottom: var(--space-xl);
+        font-size: var(--font-size-l);
+      }
+    }
+  }
+
+  &.variant {
+    &__loading {
+      .title {
+        color: var(--color-auth-primary);
+      }
+    }
+
+    &__error {
+      .title {
+        color: var(--color-danger);
+      }
+
+      .description {
+        color: var(--color-danger-hover);
+      }
+    }
+
+    &__not-found {
+      .title {
+        color: var(--color-auth-text-muted);
+      }
+    }
+
+    &__empty {
+      .title {
+        color: var(--color-auth-text-light);
+      }
+    }
+  }
+}

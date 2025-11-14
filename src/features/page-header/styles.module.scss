@@ -1,0 +1,84 @@
+@use '@/shared/styles' as *;
+
+$root-offset: 24px;
+$root-offset-tablet: 16px;
+
+.root {
+  position: fixed;
+  top: $root-offset;
+  left: $root-offset;
+  right: $root-offset;
+  z-index: 100;
+
+  width: calc(100% - $root-offset * 2);
+
+  padding: var(--space-l);
+
+  pointer-events: none;
+  user-select: none;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+
+  display: grid;
+  grid-template-columns: 38% 1fr;
+  align-items: center;
+
+  width: 100%;
+  height: -webkit-fill-available;
+}
+
+.playerSkinName {
+  min-height: 78px;
+}
+
+.bars {
+  @include flex-container(row, start, center);
+
+  justify-self: start;
+}
+
+@include respond-to('tablet') {
+  .root {
+    top: $root-offset-tablet;
+    left: $root-offset-tablet;
+    right: $root-offset-tablet;
+
+    width: calc(100% - $root-offset-tablet * 2);
+
+    padding: 0;
+  }
+
+  .container {
+    @include flex-center;
+
+    padding: 0;
+  }
+
+  .playerSkinName {
+    display: none;
+  }
+
+  .playerName {
+    padding: 0;
+
+    &::before {
+      display: none;
+    }
+  }
+
+  .bars {
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 48px;
+  }
+}
+
+@include respond-to('mobile') {
+  .bars {
+    align-items: start;
+    gap: 24px;
+  }
+}

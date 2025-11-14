@@ -1,0 +1,137 @@
+import type { TPlayerSkin, TPlayerSkinGuise, TPlayerSkinEffect } from "./types";
+
+export const PLAYER_SKIN_GUISES: TPlayerSkinGuise[] = [
+  {
+    type: "general" as const,
+    icon: "/src/assets/svg/guise-personal-c.svg",
+    label: "GENERAL GUISE",
+    description:
+      "Guise can only be applied to Commanders from specific nations.",
+  },
+  {
+    type: "national" as const,
+    icon: "/src/assets/svg/guise-national-c.svg",
+    label: "NATIONAL GUISE",
+    description: "Guise can only be applied to Commanders",
+  },
+];
+
+export const PLAYER_SKIN_EFFECTS: TPlayerSkinEffect[] = [
+  {
+    id: "signal-flare",
+    icon: "/src/assets/images/icons/icon-effect-horn.png",
+    title: "Signal Flare",
+    description: "Use the horn to launch a signal flare in battle",
+  },
+  {
+    id: "legendary-skill",
+    icon: "/src/assets/images/icons/icon-effect-legendary.png",
+    title: "Legendary Skill Effect",
+    description: "Add a visual effect for legendary skill activation in battle",
+  },
+  {
+    id: "tinted-tracers",
+    icon: "/src/assets/images/icons/icon-effect-tracer.png",
+    title: "Tinted Tracers",
+    description: "Add tinted shell tracers",
+  },
+  {
+    id: "voiceover",
+    icon: "/src/assets/images/icons/icon-effect-voiceover.png",
+    title: "Voiceover",
+    description: "Add unique voiceover",
+  },
+];
+
+export const PLAYER_SKINS: TPlayerSkin[] = [
+  {
+    id: "henk-propper",
+    name: "Henk Pröpper",
+    rank: "LEGENDARY COMMANDER",
+    level: 16,
+    description: "Original commander without special effects.",
+    portrait: "/src/assets/images/skins/portraits/henk-propper-mini.png",
+    splashImage: "/src/assets/images/skins/henk-propper.png",
+    effects: [],
+  },
+  {
+    id: "alexander-gromov",
+    name: "Alexander Gromov",
+    rank: "LEGENDARY COMMANDER",
+    level: 16,
+    description: "Skin with thematic design and unique effects.",
+    portrait: "/src/assets/images/skins/portraits/alexander-gromov-mini.png",
+    splashImage: "/src/assets/images/skins/alexander-gromov.png",
+    effects: PLAYER_SKIN_EFFECTS.slice(0, 2),
+  },
+  {
+    id: "angela-lutti",
+    name: "Angela Lutti",
+    rank: "LEGENDARY COMMANDER",
+    level: 16,
+    description: "Skin with thematic design and unique effects.",
+    portrait: "/src/assets/images/skins/portraits/angela-lutti-mini.png",
+    splashImage: "/src/assets/images/skins/angela-lutti.png",
+    effects: PLAYER_SKIN_EFFECTS.slice(0, 2),
+  },
+  {
+    id: "poseidon",
+    name: "Poseidon",
+    rank: "LEGENDARY COMMANDER",
+    level: 16,
+    description: "Unique skin for a commander with visual and audio effects.",
+    portrait: "/src/assets/images/skins/portraits/poseidon-mini.png",
+    splashImage: "/src/assets/images/skins/poseidon.png",
+    effects: PLAYER_SKIN_EFFECTS.slice(0, 2),
+  },
+  {
+    id: "athena",
+    name: "Athena",
+    rank: "LEGENDARY COMMANDER",
+    level: 16,
+    description: "Skin with thematic design and unique effects.",
+    portrait: "/src/assets/images/skins/portraits/athena-mini.png",
+    splashImage: "/src/assets/images/skins/athena.png",
+    effects: PLAYER_SKIN_EFFECTS,
+  },
+  {
+    id: "baradun",
+    name: "Baradun",
+    rank: "LEGENDARY COMMANDER",
+    level: 16,
+    description: "Skin with thematic design and unique effects.",
+    portrait: "/src/assets/images/skins/portraits/baradun-mini.png",
+    splashImage: "/src/assets/images/skins/baradun.png",
+    effects: PLAYER_SKIN_EFFECTS,
+  },
+  {
+    id: "blacksmith",
+    name: "Blacksmith",
+    rank: "LEGENDARY COMMANDER",
+    level: 16,
+    description: "Skin with thematic design and unique effects.",
+    portrait: "/src/assets/images/skins/portraits/blacksmith-mini.png",
+    splashImage: "/src/assets/images/skins/blacksmith.png",
+    effects: PLAYER_SKIN_EFFECTS,
+  },
+  {
+    id: "farmer",
+    name: "Farmer",
+    rank: "LEGENDARY COMMANDER",
+    level: 16,
+    description: "Skin with thematic design and unique effects.",
+    portrait: "/src/assets/images/skins/portraits/farmer-mini.png",
+    splashImage: "/src/assets/images/skins/farmer.png",
+    effects: PLAYER_SKIN_EFFECTS,
+  },
+  {
+    id: "zeus",
+    name: "Zeus",
+    rank: "LEGENDARY COMMANDER",
+    level: 16,
+    description: "Skin with powerful visual effects and voiceover.",
+    portrait: "/src/assets/images/skins/portraits/zeus-mini.png",
+    splashImage: "/src/assets/images/skins/zeus.png",
+    effects: PLAYER_SKIN_EFFECTS,
+  },
+];

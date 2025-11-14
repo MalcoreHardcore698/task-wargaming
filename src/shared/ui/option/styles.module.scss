@@ -1,0 +1,39 @@
+@use '@/shared/styles' as *;
+
+.root {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  align-items: start;
+  gap: 8px;
+
+  &.clickable {
+    @include interactable;
+  }
+}
+
+.icon {
+  width: 36px;
+  height: 36px;
+}
+
+.content {
+  display: grid;
+  gap: 4px;
+}
+
+.title {
+  @include text-truncate;
+
+  font-size: 14px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  color: var(--color-white);
+
+  line-height: 1;
+}
+
+.description {
+  font-size: 12px;
+  font-weight: var(--font-weight-semibold);
+  color: #96999D;
+}

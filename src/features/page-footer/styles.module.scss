@@ -1,0 +1,36 @@
+@use "@/shared/styles" as *;
+
+.root {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+
+  padding: 24px;
+}
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.leading {
+  @extend .group;
+
+  justify-content: flex-start;
+}
+
+.trailing {
+  @extend .group;
+
+  justify-content: flex-end;
+
+  margin-left: auto;
+}

@@ -1,0 +1,33 @@
+@use '@/shared/styles' as *;
+
+.root {
+  position: relative;
+
+  display: flex;
+  align-items: flex-end;
+
+  min-height: 520px;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+
+  object-fit: contain;
+  object-position: left bottom;
+  filter: drop-shadow(0 25px 60px rgb(0 0 0 / 65%));
+}
+
+@include respond-to('tablet') {
+  .root {
+    justify-content: center;
+
+    min-height: 320px;
+  }
+
+  .image {
+    width: 80%;
+
+    object-position: center;
+  }
+}

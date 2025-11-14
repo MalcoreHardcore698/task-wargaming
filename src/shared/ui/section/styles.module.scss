@@ -1,0 +1,36 @@
+@use '@/shared/styles' as *;
+
+.root {
+  @include flex-container(column, start, start);
+
+  width: 100%;
+
+  .header {
+    width: 100%;
+
+    margin-block-end: 8px;
+
+    border-block-end: 2px solid #333843;
+
+    .title {
+      width: max-content;
+
+      padding: 8px 18px 6px 18px;
+
+      background: #333843;
+
+      font-size: 16px;
+      font-weight: var(--font-weight-xl);
+      line-height: 1;
+      color: var(--color-white);
+    }
+  }
+
+  .description {
+    margin-block-end: 6px;
+
+    font-size: 12px;
+    font-weight: var(--font-weight-semibold);
+    color: #96999D;
+  }
+}

@@ -1,0 +1,100 @@
+/// Flexbox container mixin
+/// @param {String} $direction - flex-direction value
+/// @param {String} $justify - justify-content value
+/// @param {String} $align - align-items value
+@mixin flex-container($direction: row, $justify: flex-start, $align: flex-start) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/// Mixin for smooth element scaling based on viewport width
+/// @param {Number} $min-scale - lower scale bound (e.g. 0.8)
+/// @param {Number} $max-scale - upper scale bound (e.g. 1.1)
+/// @param {Length} $min-screen - viewport width where scaling starts
+/// @param {Length} $max-screen - viewport width where scaling ends
+/// @param {String} $origin - transform-origin for the element
+@mixin fluid-scale($min-scale, $max-scale, $min-screen: 320px, $max-screen: 1440px, $origin: center) {
+  @if $min-scale >$max-scale {
+    @warn "Minimum scale value (#{$min-scale}) cannot exceed maximum (#{$max-scale}).";
+  }
+
+  @else if $min-screen >=$max-screen {
+    @warn "Start width (#{$min-screen}) must be less than end width (#{$max-screen}).";
+  }
+
+  @else {
+    $preferred: calc(#{$min-scale} + (#{$max-scale} - #{$min-scale}) * ((100vw - #{$min-screen}) / (#{$max-screen} - #{$min-screen})));
+
+    transform-origin: $origin;
+    transform: scale(clamp($min-scale, #{$preferred}, $max-scale));
+  }
+}
+
+@mixin text-truncate($lines: 1) {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @if $lines >1 {
+    display: -webkit-box;
+    white-space: initial;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+  }
+
+  @else {
+    white-space: nowrap;
+  }
+}
+
+@mixin interactable {
+  &:hover {
+    opacity: 0.75;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+
+  pointer-events: auto;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+@mixin reset-button {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  &:focus,
+  &:hover,
+  &:active {
+    background: none;
+    outline: none;
+  }
+}
+
+@mixin reset-mobile-interactions {
+  user-select: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:active {
+    outline: none;
+  }
+}

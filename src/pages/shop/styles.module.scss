@@ -1,0 +1,13 @@
+@use '@/shared/styles' as *;
+
+.container {
+  @include flex-container(column, center, center);
+
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  height: -webkit-fill-available;
+
+  padding: 48px 128px;
+}
